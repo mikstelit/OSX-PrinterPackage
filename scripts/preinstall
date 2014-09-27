@@ -1,0 +1,12 @@
+#!/bin/bash
+
+target_printer=`cat /temp/Printer_Install/printer.config | \
+    grep NAME | cut -d"=" -f2`
+
+printers=`lpstat -p | grep printer | cut -d" " -f2`
+for printer in $printers;
+do
+    if [ "$printer" == $target_printer ]; then
+        lpadmin -x $target_printer
+    fi
+done

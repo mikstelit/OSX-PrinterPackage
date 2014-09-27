@@ -1,0 +1,27 @@
+#!/bin/bash
+
+temp_directory="/tmp/Printer_Install"
+target_printer=`cat ${temp_directory}/printer.config | \
+    grep NAME | cut -d"=" -f2`
+printer_location=`cat ${temp_directory}/printer.config | \
+    grep LOCATION | cut -d"=" -f2`
+printer_address=`cat ${temp_directory}/printer.config | \
+    grep ADDRESS | cut -d"=" -f2`
+driver=`cat ${temp_directory}/printer.config | \
+    grep DRIVER | cut -d"=" -f2`
+ppd="${temp_directory}/*.ppd"
+package="${temp_directory}/*.pkg"
+driver_test=`lpinfo -m -h 127.0.0.1:631 | grep "${driver}"`
+
+if [ -z "$driver_test" ]; then
+    sudo installer -pkg $package -target /
+fi
+
+lpadmin -p $target_printer \
+    -L $printer_location \
+    -v $printer_address \
+    -o printer-is-shared=false \
+    -P $ppd \
+    -E
+
+rm -rf $temp_directory
