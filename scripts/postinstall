@@ -1,14 +1,10 @@
 #!/bin/bash
 
-temp_directory="/tmp/Printer_Install"
-target_printer=`cat ${temp_directory}/printer.config | \
-    grep NAME | cut -d"=" -f2`
-printer_location=`cat ${temp_directory}/printer.config | \
-    grep LOCATION | cut -d"=" -f2`
-printer_address=`cat ${temp_directory}/printer.config | \
-    grep ADDRESS | cut -d"=" -f2`
-driver=`cat ${temp_directory}/printer.config | \
-    grep DRIVER | cut -d"=" -f2`
+temp_directory="/tmp/PrinterConfig"
+target_printer=$(defaults read ${temp_directory}/PrinterConfig.plist NAME)
+printer_location=$(defaults read ${temp_directory}/PrinterConfig.plist LOCATION)
+printer_address=$(defaults read ${temp_directory}/PrinterConfig.plist ADDRESS)
+driver=$(defaults read ${temp_directory}/PrinterConfig.plist DRIVER)
 ppd="${temp_directory}/*.ppd"
 package="${temp_directory}/*.pkg"
 driver_test=`lpinfo -m -h 127.0.0.1:631 | grep "${driver}"`
